@@ -6,8 +6,6 @@ items:
     template: pbwis-liberty-build
   metadata:
     name: pbwis-liberty-build
-    namespace: pbwis-liberty-build
-    resourceVersion: "37393"
   objects:
   - apiVersion: v1
     kind: ImageStream
@@ -87,10 +85,10 @@ items:
   - description: Git source URI for application
     name: SOURCE_URL
     required: true
-    value: https://github.com/kpostreich/PlantsByWebSphereEE7ImageService
+    value: https://github.com/kpostreich/pbwisEE7
   - description: Git branch/tag reference
     name: SOURCE_REF
-    value: pbwis
+    value: master
   - description: WebSphere Docker Image Name -
     name: WEBSPHERE_IMAGE
     required: true
@@ -98,7 +96,7 @@ items:
   - description: WebSphere Docker Image Version -
     name: WEBSPHERE_VERSION
     required: true
-    value: 19.0.0.6-javaee7-ubi-min-amd64
+    value: javaee7-ubi-min-amd64
 kind: List
 metadata:
   resourceVersion: ""
