@@ -1,0 +1,105 @@
+apiVersion: v1
+items:
+- apiVersion: template.openshift.io/v1
+  kind: Template
+  labels:
+    template: pbwis-liberty-build
+  metadata:
+    name: pbwis-liberty-build
+    namespace: pbwis-liberty-build
+    resourceVersion: "37393"
+  objects:
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        application: websphere-liberty
+      name: websphere-liberty
+    spec:
+      dockerImageRepostitory: ${WEBSPHERE_IMAGE}:${WEBSPHERE_VERSION}
+      lookupPolicy:
+        local: false
+      tags:
+      - annotations: null
+        from:
+          kind: DockerImage
+          name: ${WEBSPHERE_IMAGE}:${WEBSPHERE_VERSION}
+        name: latest
+      - annotations: null
+        from:
+          kind: DockerImage
+          name: ${WEBSPHERE_IMAGE}:${WEBSPHERE_VERSION}
+        name: ${WEBSPHERE_VERSION}
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${APPLICATION_NAME}:latest
+      source:
+        type: Binary
+      strategy:
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+          forcePull: true
+          from:
+            kind: ImageStreamTag
+            name: websphere-liberty:${WEBSPHERE_VERSION}
+          noCache: true
+        type: Source
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}-pipeline
+    spec:
+      source:
+        git:
+          ref: ${SOURCE_REF}
+          uri: ${SOURCE_URL}
+      strategy:
+        jenkinsPipelineStrategy:
+          env:
+          - name: APPLICATION_NAME
+            value: ${APPLICATION_NAME}
+          jenkinsfilePath: Jenkinsfile
+      triggers:
+      - github:
+          secret: mysecret
+        type: GitHub
+  parameters:
+  - description: The name for the application.
+    name: APPLICATION_NAME
+    required: true
+    value: PlantsByWebSphereEE7ImageService
+  - description: Git source URI for application
+    name: SOURCE_URL
+    required: true
+    value: https://github.com/kpostreich/PlantsByWebSphereEE7ImageService
+  - description: Git branch/tag reference
+    name: SOURCE_REF
+    value: pbwis
+  - description: WebSphere Docker Image Name -
+    name: WEBSPHERE_IMAGE
+    required: true
+    value: ibmcom/websphere-liberty
+  - description: WebSphere Docker Image Version -
+    name: WEBSPHERE_VERSION
+    required: true
+    value: 19.0.0.6-javaee7-ubi-min-amd64
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
