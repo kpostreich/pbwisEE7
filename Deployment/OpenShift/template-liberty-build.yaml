@@ -73,15 +73,15 @@ items:
           - name: APPLICATION_NAME
             value: ${APPLICATION_NAME}
           jenkinsfilePath: Jenkinsfile
-      triggers:
-      - github:
-          secret: mysecret
-        type: GitHub
+#      triggers:
+#      - github:
+#          secret: mysecret
+#        type: GitHub
   parameters:
   - description: The name for the application.
     name: APPLICATION_NAME
     required: true
-    value: PlantsByWebSphereEE7ImageService
+    value: imageservice
   - description: Git source URI for application
     name: SOURCE_URL
     required: true

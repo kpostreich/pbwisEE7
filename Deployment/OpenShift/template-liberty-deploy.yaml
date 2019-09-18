@@ -36,7 +36,7 @@ objects:
     name: ${APPLICATION_NAME}
   spec:
     port:
-      targetPort: 9443-tcp
+      targetPort: 9080-tcp
     tls:
       termination: passthrough
     to:
@@ -133,7 +133,7 @@ parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
   required: true
-  value: PlantsByWebSphereEE7ImageService
+  value: imageservice
 - description: Hostname for PBWIS application database
   name: DB2_HOST
   required: true
