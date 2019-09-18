@@ -34,7 +34,7 @@ pipeline {
         sh """
         env
         mvn -v 
-        cd pbwisEE7
+//        cd pbwisEE7
         mvn clean package
         """
       }
