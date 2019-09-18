@@ -19,6 +19,10 @@ objects:
       port: 9080
       protoco: TCP
       targetPort: 9080
+    - name: 9443-tcp
+      port: 9443
+      protoco: TCP
+      targetPort: 9443
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
@@ -33,6 +37,8 @@ objects:
   spec:
     port:
       targetPort: 9080-tcp
+    tls:
+      termination: passthrough
     to:
       name: ${APPLICATION_NAME}
 - apiVersion: v1
@@ -75,11 +81,30 @@ objects:
             value: ${DB2_PASSWORD}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 45
+            periodSeconds: 45
+            successThreshold: 1
+            tcpSocket:
+              port: 9080
+            timeoutSeconds: 1
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 9080
             name: 9080-tcp
             protocol: TCP
+          - containerPort: 9443
+            name: 9443-tcp
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 9080
+            timeoutSeconds: 1
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
