@@ -1,5 +1,5 @@
 // Jenkinsfile for Liberty App - CI/CD
-def templateName = 'gse-liberty'
+def templateName = 'pbwis-liberty'
 
 openshift.withCluster() {
   env.NAMESPACE = openshift.project()
@@ -34,19 +34,8 @@ pipeline {
         sh """
         env
         mvn -v 
-        cd CustomerOrderServicesProject
+        cd pbwisEE7
         mvn clean package
-        """
-      }
-    }
-      
-    // Run Maven unit tests
-    stage('Unit Test'){
-      steps {
-        sh """
-        mvn -v 
-        cd CustomerOrderServicesProject
-        mvn test
         """
       }
     }
