@@ -14,11 +14,11 @@ objects:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
   spec:
+    type: NodePort
     ports:
     - name: 9080-tcp
       port: 9080
       protoco: TCP
-      targetPort: 9080
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
